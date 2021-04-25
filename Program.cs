@@ -21,7 +21,6 @@ namespace MySqlToMsSql
                 //Получаем данные из БД.
                 using (MySqlDataAdapter tableDataAdapter = new MySqlDataAdapter("select * from users order by record_id desc limit 500", con))
                 {
-                    tableDataAdapter.AcceptChangesDuringFill = false;
                     tableDataAdapter.Fill(tableData);
                 }
             }
@@ -44,7 +43,16 @@ namespace MySqlToMsSql
                 //Создаем таблицу в БД.
                 using (SqlCommand addTable = new SqlCommand(addTableCommand, con))
                 {
-                    addTable.ExecuteNonQuery();
+                    try
+                    {
+                        addTable.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ошибка! {0}",ex.Message);
+                        Console.ReadLine();
+                        Environment.Exit(0);
+                    }
                 }
 
                 //Отдельно парсим значения из таблицы и заполняем ими созданную ранее таблицу.
@@ -67,7 +75,16 @@ namespace MySqlToMsSql
 
                         using (SqlCommand addDataCommand = new SqlCommand(addData, con))
                         {
-                            addDataCommand.ExecuteNonQuery();
+                            try
+                            {
+                                addDataCommand.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Ошибка! {0}", ex.Message);
+                                Console.ReadLine();
+                                Environment.Exit(0);
+                            }
                         }
                     }
                 }
