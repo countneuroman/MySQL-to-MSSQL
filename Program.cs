@@ -14,7 +14,7 @@ namespace MySqlToMsSql
 
             DataSet tableData = new DataSet();  //Хранит данные, полученные из таблицы БД.
 
-            using (MySqlConnection con = new MySql.Data.MySqlClient.MySqlConnection(connectionMySql))
+            using (MySqlConnection con = new MySqlConnection(connectionMySql))
             {
                 con.Open(); //Подключаемся к БД.
 
