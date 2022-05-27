@@ -7,26 +7,28 @@ namespace MySqlToMsSql
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            string connectionMySql = @"server=127.0.0.1;uid=root;pwd=19953107;database=usersdb";
-            string connectionMsSql = @"Server=(localdb)\mssqllocaldb;Database=usersdb;Trusted_Connection=True;";
+            var connectionMySql = @"server=127.0.0.1;uid=root;pwd=19953107;database=usersdb";
+            var connectionMsSql = @"Server=(localdb)\mssqllocaldb;Database=usersdb;Trusted_Connection=True;";
 
-            DataSet tableData = new DataSet();  //Хранит данные, полученные из таблицы БД.
+            var tableData = new DataSet();  //Хранит данные, полученные из таблицы БД.
 
-            using (MySqlConnection con = new MySqlConnection(connectionMySql))
+            using (var connection = new MySqlConnection(connectionMySql))
             {
-                con.Open(); //Подключаемся к БД.
+                connection.Open(); //Подключаемся к БД.
 
                 //Получаем данные из БД.
-                using (MySqlDataAdapter tableDataAdapter = new MySqlDataAdapter("select * from users order by record_id desc limit 500", con))
+                using (var tableDataAdapter = new MySqlDataAdapter(
+                           "select * from users order by record_id desc limit 500",
+                           connection))
                 {
                     tableDataAdapter.Fill(tableData);
                 }
             }
 
 
-            using (SqlConnection con = new SqlConnection(connectionMsSql))
+            using (var con = new SqlConnection(connectionMsSql))
             {
                 string addTableCommand = null;
                 string addDataTableCommand = null;
@@ -41,7 +43,7 @@ namespace MySqlToMsSql
                 }
 
                 //Создаем таблицу в БД.
-                using (SqlCommand addTable = new SqlCommand(addTableCommand, con))
+                using (var addTable = new SqlCommand(addTableCommand, con))
                 {
                     try
                     {
@@ -63,7 +65,7 @@ namespace MySqlToMsSql
                         string addData = null;
                         addData += addDataTableCommand + "values (";
 
-                        for (int i = 0; i < dt.Columns.Count; i++)
+                        for (var i = 0; i < dt.Columns.Count; i++)
                         {
                             if (dt.Columns[i].ColumnName != "record_id")
                             {
@@ -73,7 +75,7 @@ namespace MySqlToMsSql
 
                         addData = addData.Substring(0, addData.Length - 1) + ")";
 
-                        using (SqlCommand addDataCommand = new SqlCommand(addData, con))
+                        using (var addDataCommand = new SqlCommand(addData, con))
                         {
                             try
                             {

@@ -3,13 +3,13 @@
 
 namespace MySqlToMsSql
 {
-    static class UpdateTable
+    internal static class UpdateTable
     {
         public static string UpdateCommand(string tableName, DataTable tableData)
         {
-            string updateTable = "insert into " + tableName + "(";
+            var updateTable = "insert into " + tableName + "(";
 
-            for (int i = 0; i < tableData.Columns.Count; i++)
+            for (var i = 0; i < tableData.Columns.Count; i++)
             {
                 if (tableData.Columns[i].ColumnName != "record_id")
                 {
